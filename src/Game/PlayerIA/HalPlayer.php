@@ -41,6 +41,25 @@ class HalPlayer extends Player
         // How can i display the result of each round ? $this->prettyDisplay()
         // -------------------------------------    -----------------------------------------------------
 
-        return parent::rockChoice();
+        $opponentChoice = $this->result->getLastChoiceFor($this->opponentSide);
+        if ($opponentChoice === 0) {
+
+            return parent::paperChoice();
+        }
+
+        switch ($opponentChoice) {
+            case parent::paperChoice():
+                return parent::scissorsChoice();
+                break;
+
+            case parent::rockChoice():
+                return parent::paperChoice();
+                break;
+
+            case parent::scissorsChoice():
+                return parent::rockChoice();
+                break;
+        }
     }
-};
+}
+;
