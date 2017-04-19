@@ -41,7 +41,13 @@ class AlphaPlayer extends Player
         // How can i display the result of each round ? $this->prettyDisplay()
         // -------------------------------------    -----------------------------------------------------
 
-        return parent::rockChoice();
+        $opponentChoice = $this->result->getLastChoiceFor($this->opponentSide);
+        if ($opponentChoice === 0) {
+
+            return parent::paperChoice();
+        }
+
+        return $opponentChoice;
 
     }
 };

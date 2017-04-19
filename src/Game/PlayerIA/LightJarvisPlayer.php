@@ -41,7 +41,12 @@ class LightJarvisPlayer extends Player
         // How can i display the result of each round ? $this->prettyDisplay()
         // -------------------------------------    -----------------------------------------------------
 
-        return parent::rockChoice();
+        $choices = array(parent::rockChoice(), parent::paperChoice(), parent::scissorsChoice());
+
+        srand();
+        $choice = rand(0, 2);
+
+        return $choices[$choice];
 
     }
 };

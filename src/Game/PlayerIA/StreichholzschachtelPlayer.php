@@ -17,32 +17,50 @@ class StreichholzschachtelPlayer extends Player
 
     public function getChoice()
     {
-        // -------------------------------------    -----------------------------------------------------
-        // How to get my Last Choice           ?    $this->result->getLastChoiceFor($this->mySide) -- if 0 (first round)
-        // How to get the opponent Last Choice ?    $this->result->getLastChoiceFor($this->opponentSide) -- if 0 (first round)
-        // -------------------------------------    -----------------------------------------------------
-        // How to get my Last Score            ?    $this->result->getLastScoreFor($this->mySide) -- if 0 (first round)
-        // How to get the opponent Last Score  ?    $this->result->getLastScoreFor($this->opponentSide) -- if 0 (first round)
-        // -------------------------------------    -----------------------------------------------------
-        // How to get all the Choices          ?    $this->result->getChoicesFor($this->mySide)
-        // How to get the opponent Last Choice ?    $this->result->getChoicesFor($this->opponentSide)
-        // -------------------------------------    -----------------------------------------------------
-        // How to get my Last Score            ?    $this->result->getLastScoreFor($this->mySide)
-        // How to get the opponent Last Score  ?    $this->result->getLastScoreFor($this->opponentSide)
-        // -------------------------------------    -----------------------------------------------------
-        // How to get the stats                ?    $this->result->getStats()
-        // How to get the stats for me         ?    $this->result->getStatsFor($this->mySide)
-        //          array('name' => value, 'score' => value, 'friend' => value, 'foe' => value
-        // How to get the stats for the oppo   ?    $this->result->getStatsFor($this->opponentSide)
-        //          array('name' => value, 'score' => value, 'friend' => value, 'foe' => value
-        // -------------------------------------    -----------------------------------------------------
-        // How to get the number of round      ?    $this->result->getNbRound()
-        // -------------------------------------    -----------------------------------------------------
-        // How can i display the result of each round ? $this->prettyDisplay()
-        // -------------------------------------    -----------------------------------------------------
+        // Get data
+        $opponentChoice = $this->result->getLastChoiceFor($this->opponentSide);
+        $myLastChoice = $this->result->getLastChoiceFor($this->mySide);
+        $opponentStats = $this->result->getStatsFor($this->opponentSide);
+        $round = $this->result->getNbRound();
 
+        $papersCount = $opponentStats['paper'];
+        $rocksCount = $opponentStats['rock'];
+        $scissorsCount = $opponentStats['scissors'];
 
-        return parent::rockChoice();
+        // First round => arbitrary choice
+        if ($opponentChoice === 0) {
 
+            return parent::paperChoice();
+        }
+
+        // Later rounds: if oppenent is inclined to play often a choice,
+        // play winning choice over his
+        if ($round >= 3) {
+            if ($papersCount > $round / 2) {
+
+                return parent::scissorsChoice();
+            } elseif ($rocksCount > $round / 2) {
+
+                return parent::paperChoice();
+            } elseif ($scissorsCount > $round / 2) {
+
+                return parent::rockChoice();
+            }
+        }
+
+        // No clear pattern emerges: play winning case over my last choice
+        switch ($myLastChoice) {
+            case parent::paperChoice():
+                return parent::scissorsChoice();
+                break;
+
+            case parent::rockChoice():
+                return parent::paperChoice();
+                break;
+
+            case parent::scissorsChoice():
+                return parent::rockChoice();
+                break;
+        }
     }
 };
